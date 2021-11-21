@@ -6,7 +6,7 @@ const API="https://jsonplaceholder.typicode.com/posts";
 
 export default function App(){
 
-        const [mekala, setMekala]= useState({posts:[],userId:"",title:"",body:""})
+        const [mekala, setMekala]= useState({posts:[],userId:"",title:"",body:"",id:""})
         
 
 
@@ -41,8 +41,26 @@ const deletePosts= async(pid)=>{
   const {data}=await axios.delete(`${API}/${pid}`)
 
   console.log(data)
+
+  const filterdPosts=mekala.posts.filter((pst)=>{
+
+    return pst.id!==pid
+
+  })
+
+  setMekala({posts:filterdPosts})
  
   
+}
+
+
+////Edit posts////
+
+const editPosts=(pst)=>{
+
+
+
+
 
 }
 
@@ -57,15 +75,12 @@ const deletePosts= async(pid)=>{
 
 
 
+const handleSubmit=(e)=>{
 
+  e.preventDefault()
 
-
-
-
-
-
-const handleSubmit=()=>{
-
+  
+  createPosts()
 
 
 
@@ -76,15 +91,40 @@ const handleSubmit=()=>{
 const handleChange=({target:{name,value}})=>{
 
 
+console.log(name,value)
+
+
+}
+
+
+///Create operation////
+
+
+const createPosts=async()=>{
+  
+  const{data}=await axios.post(API,{
+       
+    userId:mekala.userId,
+    title:mekala.title,
+    body:mekala.body,
 
 
 
+  })
 
+  console.log(data)
+ 
+  const mekalap=mekala.posts
+   mekalap.push(data)
+
+   setMekala({posts:mekalap, userId:"",title:"",body:""})
 
 
 
 
 }
+
+
 
 
 
@@ -168,7 +208,7 @@ const handleChange=({target:{name,value}})=>{
         <td>{post.title}</td>
         <td>{post.body}</td>
         <td>
-        <button type="button" className="btn btn-primary">EDIT</button>
+        <button type="button" className="btn btn-primary" onClick={()=>editPosts(post)}>EDIT</button>
         <button type="button" className="btn btn-warning" onClick={()=>deletePosts(post.id)}>DELETE</button>
 
         </td>
